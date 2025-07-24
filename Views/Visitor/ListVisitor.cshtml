@@ -1,0 +1,295 @@
+﻿@using VisitorManagementSystem.Models.ViewModels
+@using VisitorManagementSystem.Utilities
+@model IEnumerable<VisitorManagementSystem.Models.ViewModels.VisitorViewModel>
+
+<style>
+	tbody td, thead th {
+		font-size: 17px;
+		position: relative;
+	}
+
+	thead th {
+		color: #2596be !important;
+	}
+
+	body {
+		background-image: url('/Galata_2.jpg');
+		background-size: cover;
+		background-position: center;
+	}
+
+	html {
+		height: 125%;
+	}
+
+	.no-exit {
+		background-color: #f8d7da; 
+	}
+
+	label {
+		color: white; 
+		font-weight: bold; 
+		font-size: 1rem; 
+	}
+
+	.btn {
+		font-weight: bold; 
+	}
+
+</style>
+
+<div class="container">
+	<!-- Zaman Filtreleme Alanı -->
+	<br /><br />
+	<div class="row mb-3">
+		<div class="col-md-3">
+			<label for="startDate">Başlangıç Tarihi:</label>
+			<input type="date" id="startDate" class="form-control">
+		</div>
+		<div class="col-md-3">
+			<label for="endDate">Bitiş Tarihi:</label>
+			<input type="date" id="endDate" class="form-control">
+		</div>
+		<div class="col-md-2 d-flex flex-column justify-content-end mt-3">
+			<button id="filterButton" class="btn btn-primary btn-sm w-100" style="background-color: #2596be; color: white;">Filtrele</button>
+		</div>
+		<div class="col-md-2 d-flex flex-column justify-content-end mt-3">
+			<a href="/Visitor/ZiyaretciListele" class="btn btn-primary btn-sm w-100" style="background-color: #2596be; color: white;">Filtreyi Kaldır</a>
+		</div>
+	</div>
+	<br /> <br />
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Adı Soyadı</th>
+				<th>TC</th>
+				<th>Ziyaretçi Şirket/Kurum</th>
+				<th>Ziyaret Edilen Kişi</th>
+				<th>Cinsiyet</th>
+				<th>Tarih</th>
+				<th>Giriş Saati</th>
+				<th>Çıkış Saati</th>
+				<th>Geçirilen Süre</th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var visitor in Model)
+			{
+				<tr class="@(visitor.IsInside ? "table-danger" : "")">
+					<td>@visitor.FullName</td>
+					<td>@visitor.CitizenshipNumber</td>
+					<td>@visitor.CompanyName</td>
+					<td>@visitor.MeetingWith</td>
+					<td>@visitor.Gender</td>
+					<td>@visitor.EntryDate.ToString("dd.MM.yyyy")</td>
+					<td>@visitor.EntryDate.ToString("HH:mm")</td>
+					<td>@(visitor.ExitDate != DateTime.MinValue ? visitor.ExitDate.ToString("HH:mm") : "Henüz Çıkış Yapılmadı")</td>
+					<td>
+						@if (visitor != null && !visitor.IsInside && visitor.EntryDate != null && visitor.ExitDate != null)
+						{
+							var duration = visitor.ExitDate - visitor.EntryDate;
+
+							var minutes = Math.Floor(duration.TotalMinutes);
+							<text>@(minutes >= 1 ? $"{minutes} dakika" : "0 dakika")</text>
+						}
+
+						else
+						{
+							<text>-</text>
+						}
+					</td>
+					<td>
+						@if (visitor.IsInside)
+						{
+							<div style="display: flex; gap: 10px;">
+								<!-- Güncelleme Butonu (Update) -->
+								<input type="hidden" name="visitorId" value="@visitor.VisitorId" />
+								<button data-bs-toggle="modal"
+										data-bs-target="#exampleModal"
+										class="btn btn-link"
+										style="padding: 0; border: none; background: transparent;"
+										data-id="@visitor.VisitorId"
+										data-name="@visitor.FullName"
+										data-tc="@visitor.CitizenshipNumber"
+										data-company="@visitor.CompanyName"
+										data-meetingwith="@visitor.MeetingWith"
+										data-gender="@visitor.Gender"
+										title="Güncelle">
+									<i class="fa-regular fa-pen-to-square" style="font-size: 20px; color: black;"></i>
+								</button>
+								<form method="post" action="@Url.Action("ExitVisitor", "Visitor")">
+									<input type="hidden" name="visitorId" value="@visitor.VisitorId" />
+									<button type="submit" class="btn btn-link" style="padding: 0; border: none; background: transparent;" title="Çıkış Yap">
+										<i class="fa-solid fa-person-walking-dashed-line-arrow-right" style="font-size: 20px; color: black;"></i>
+									</button>
+								</form>
+							</div>
+						}
+					</td>
+					<td></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="visitorId" />
+				<div class="mb-3">
+					<label>Ad Soyad:</label>
+					<input type="text" class="form-control" id="name" 
+						pattern="^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$" title="Ad ve soyad sadece harflerden oluşmalıdır." required />
+				</div>
+				<div class="mb-3">
+					<label>TC:</label>
+					<input type="text" class="form-control" id="tc" 
+						pattern="\d{11}" maxlength="11" title="TC kimlik numarası 11 haneli olmalıdır." required />
+				</div>
+				<div class="mb-3">
+					<label>Şirket/Kurum:</label>
+					<input type="text" class="form-control" id="company" />
+				</div>
+				<div class="mb-3">
+					<label>Ziyaret Edilen Kişi:</label>
+					<input type="text" class="form-control" id="meetingWith" 
+						pattern="^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$" title="Ziyaretçinin kime geldiği bilgisi sadece harflerden oluşmalıdır." required />
+				</div>
+				<div class="mb-3">
+					<label for="gender">Cinsiyet:</label>
+					<select class="form-select" id="gender" required>
+						<option value="" selected disabled>Seçiniz</option>
+						<option value="Kadın">Kadın</option>
+						<option value="Erkek">Erkek</option>
+					</select>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+				<button type="button" class="btn btn-primary" id="updateSaveChanges">Değişiklikleri Kaydet</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<script type="text/javascript">
+			$(document).ready(function () {
+				$(document).on('click', '[data-bs-toggle="modal"]', function () {
+					$('#visitorId').val($(this).data('id'));
+					$('#name').val($(this).data('name'));
+					$('#tc').val($(this).data('tc'));
+					$('#company').val($(this).data('company'));
+					$('#meetingWith').val($(this).data('meetingwith'));
+					$('#gender').val($(this).data('gender'));
+				});
+
+			$('#updateSaveChanges').click(function () {
+				var formValid = true;
+
+				var namePattern = /^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$/;
+				if (!namePattern.test($('#name').val())) {
+					formValid = false;
+					alert("Ad ve soyad sadece harflerden oluşmalıdır.");
+				}
+				var tcPattern = /^\d{11}$/;
+				if (!tcPattern.test($('#tc').val())) {
+					formValid = false;
+					alert("TC kimlik numarası 11 haneli olmalıdır.");
+				}
+
+				if (!namePattern.test($('#meetingWith').val())) {
+					formValid = false;
+					alert("Ziyaret edilen kişi adı sadece harflerden oluşmalıdır.");
+				}
+
+				if (!formValid) {
+					return;
+				}
+
+				var visitor = {
+					VisitorId: $('#visitorId').val(),
+					FullName: $('#name').val(),
+					CitizenshipNumber: $('#tc').val(),
+					CompanyName: $('#company').val(),
+					MeetingWith: $('#meetingWith').val(),
+					Gender: $('#gender').val()
+				};
+
+				$.ajax({
+					url: '@Url.Action("UpdateVisitor", "Visitor")', 
+					type: 'POST',
+					data: visitor,
+					success: function (response) {
+						if (response.success) {
+							alert(response.message);
+							location.reload(); 
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error("Ajax hatası:", xhr.responseText);
+					}
+				});
+			});
+		});
+
+		document.getElementById("filterButton").addEventListener("click", function () {
+			var start = document.getElementById("startDate").value;
+			var end = document.getElementById("endDate").value;
+
+			var url = "/Visitor/ZiyaretciListele";
+
+			var params = [];
+			if (start) params.push("startDate=" + encodeURIComponent(start));
+			if (end) params.push("endDate=" + encodeURIComponent(end));
+
+			if (params.length > 0) {
+				url += "?" + params.join("&");
+			}
+
+			window.location.href = url;
+		});
+		document.getElementById("startDate").addEventListener("change", function () {
+			var startDate = this.value;
+			var endDateInput = document.getElementById("endDate");
+
+			endDateInput.min = startDate;
+
+			if (endDateInput.value && endDateInput.value < startDate) {
+				endDateInput.value = "";
+			}
+		});
+		document.getElementById("filterButton").addEventListener("click", function (event) {
+			var startDateInput = document.getElementById("startDate").value;
+			var endDateInput = document.getElementById("endDate").value;
+
+			if (!startDateInput) {
+				alert("Lütfen başlangıç tarihini giriniz.");
+				event.preventDefault();
+				return;
+			}
+ü
+			if (startDateInput && !endDateInput.value) {
+				var today = new Date();
+				var todayString = today.toISOString().split("T")[0]; 
+				endDateInput.value = todayString;
+			}
+
+			if (!startDateInput && endDateInput.value) {
+				alert("Lütfen başlangıç tarihini de giriniz.");
+				event.preventDefault();
+				return;
+			}
+		});
+	</script>
+}

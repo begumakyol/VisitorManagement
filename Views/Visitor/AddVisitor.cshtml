@@ -1,0 +1,94 @@
+﻿@using VisitorManagementSystem.Models.Entities
+@model Visitor
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<style>
+    body {
+        background-image: url('/Galata_2.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    html {
+        height: 125%;
+    }
+
+    .box {
+        padding: 50px;
+        background-color: #eaeaea;
+        height: 400px;
+
+    }
+
+    label {
+        font-weight: bold;
+        font-size: 18px;
+        color: #2596be;
+    }
+
+    .btn-submit {
+        width: auto; 
+        padding: 5px 80px;
+        margin-left: auto;
+        margin-top: 28px; 
+        display: block; 
+        color: white;
+        font-weight: bold; 
+        font-size: 18px; 
+        background-color: #2596be; 
+    }
+
+    .container {
+        height: auto; 
+    }
+
+</style>
+
+<div class="container mt-5 box">
+    <form class="row" method="post" asp-action="AddVisitor" asp-controller="Visitor">
+        <div class="form row">
+            <div class="form-group mb-3 col-md-6">
+                <label for="inputFullName" class="input-label">Adı Soyadı:</label>
+                <input type="text" class="form-control" asp-for="FullName"
+                       placeholder="Ziyaretçinin Adını ve Soyadını Giriniz:"
+                       pattern="^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$"
+                       title="Ad ve soyad sadece harflerden oluşmalıdır."
+                       required>
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3 col-md-6">
+                <label for="inputCitizenshipNumber">TC Kimlik No:</label>
+                <input type="text" class="form-control" asp-for="CitizenshipNumber"
+                       placeholder="Ziyaretçinin TC Kimlik Numarasını Giriniz:"
+                       pattern="\d{11}" maxlength="11" title="TC kimlik numarası 11 haneli olmalıdır."
+                       required>
+                <span asp-validation-for="CitizenshipNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3 col-md-6">
+                <label for="inputCompanyName">Ziyaretçi Şirket/Kurum:</label>
+                <input type="text" class="form-control" asp-for="CompanyName" placeholder="Ziyaretçinin Hangi Şirket/Kurum'dan Geldiğini Giriniz:">
+            </div>
+            <div class="form-group mb-3 col-md-6">
+                <label for="inputMeetingWith">Ziyaret Edilen Kişi:</label>
+
+                <input type="text" class="form-control" asp-for="MeetingWith" placeholder="Ziyaretçinin Kime Geldiğini Giriniz:"
+                       pattern="^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$"
+                       title="Ziyaretçinin kime geldiği bilgisi sadece harflerden oluşmalıdır."
+                       required>
+            </div>
+            <div class="form-group mb-3 col-md-6">
+                <label for="inputGender">Cinsiyet</label>
+                <select asp-for="Gender" class="form-control" style="color: #595c5f" required>
+                    <option value="" disabled selected>Seçiniz:</option>
+                    <option value="Kadın">Kadın</option>
+                    <option value="Erkek">Erkek</option>
+                </select>
+            </div>
+            <div class="form-group mb-3 col-md-6">
+                <button type="submit" class="btn btn-info btn-submit">Kaydet</button>
+            </div>
+        </div>     
+    </form>
+</div>

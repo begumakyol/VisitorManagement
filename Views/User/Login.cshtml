@@ -1,0 +1,156 @@
+﻿@using VisitorManagementSystem.Models.ViewModels
+
+@model AdLoginVM
+
+@{
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #003859;
+            background-image: url('/bogazici.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center; 
+            background-attachment: fixed;
+        }
+
+        #login .container #login-row #login-column #login-box {
+            margin-top: 50px;
+            max-width: 600px;
+            height: 600px;
+            border: 1px solid #9C9C9C;
+            background-color: #EAEAEA;
+        }
+
+		#login .container #login-row #login-column #login-box #login-form {
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        #newLocationDiv{
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        #loginButton {
+            float: right;
+            background-color: #2596be;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="login">
+        <h3 class="text-center text-white pt-5">
+            <img src="/Logo.png" alt="Logo" style=" width: 350px;">
+            <h3 class="text-center text-white font-weight-bold">Ziyaretçi Yönetim Sistemi</h3>
+        </h3>
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+
+                        <div class="container" style="max-width: 500px;">
+                            <!-- LOGIN FORM -->
+                            <form id="login-form" method="post" asp-action="GirisYap" asp-controller="User">
+                                <div class="form-group">
+                                    <label class="text-info font-weight-bold">Kullanıcı Adı:</label><br>
+                                    <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adınızı Giriniz:">
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-info font-weight-bold">Şifre:</label><br>
+                                    <div class="input-group">
+                                        <input type="password" asp-for="Password" class="form-control" placeholder="Şifrenizi Giriniz:" id="passwordInput" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="cursor:pointer;" onclick="togglePassword()">
+                                                <i id="toggleIcon" class="fa fa-eye"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-info font-weight-bold">Lokasyon:</label>
+                                    <select asp-for="SelectedLocation" asp-items="ViewBag.Locations" class="form-control mb-2">
+                                        <option value="">Seçiniz:</option>
+                                    </select>
+
+                                    <button type="button" onclick="toggleLocationInput()" class="btn btn-info btn-md font-weight-bold w-100">
+                                        Yeni Lokasyon Ekle
+                                    </button>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-info btn-md font-weight-bold w-100" value="Giriş Yap">
+                                </div>
+                            </form>
+
+                            <!-- YENİ LOKASYON FORMU -->
+                            <form method="post" asp-action="AddLocation" asp-controller="Location">
+                                <div id="newLocationDiv" style="display: none;" class="form-group mt-3">
+                                    <label class="text-info font-weight-bold">Yeni Lokasyon:</label>
+                                    <input type="text" name="NewLocationName" id="newLocationInput" class="form-control mb-2" placeholder="Yeni Lokasyon Giriniz">
+                                    <button type="submit" class="btn btn-info btn-md font-weight-bold w-100">Kaydet</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+
+        function toggleDropdown() {
+            const checkbox = document.getElementById('no-list');
+        }
+
+        function toggleLocationInput() {
+            
+            const newLocDiv = document.getElementById("newLocationDiv");
+
+            if (newLocDiv.style.display === "none") {
+                newLocDiv.style.display = "block";
+               
+            } else {
+                newLocDiv.style.display = "none";
+               
+            }
+        }
+
+        function togglePassword() {
+            const input = document.getElementById("passwordInput");
+            const icon = document.getElementById("toggleIcon");
+
+            if (input.type === "password") {
+              input.type = "text";
+              icon.classList.remove("fa-eye");
+              icon.classList.add("fa-eye-slash");
+            } else {
+              input.type = "password";
+              icon.classList.remove("fa-eye-slash");
+              icon.classList.add("fa-eye");
+            }
+          }
+    </script>
+</body>
+
+

@@ -1,0 +1,112 @@
+﻿<head>
+    <style>
+        body {
+            background-image: url('/Galata_2.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        html {
+            height: 125%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-5">
+
+        <!-- Kartlar -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-white mb-3" style="background-color: #ef4129">
+                    <div class="card-header text-center" style="font-weight: bold">Bu Haftaki Toplam Ziyaretçi</div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" id="weeklyVisitorCount">...</h5>
+                        <p class="card-text">Pazartesi - Cuma arası toplam ziyaretçi sayısı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white mb-3" style="background-color: #00babd">
+                    <div class="card-header text-center" style="font-weight: bold">Bugünkü Ziyaretçi</div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" id="todayVisitorCount">...</h5>
+                        <p class="card-text">Bugün gelen ziyaretçi sayısı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white mb-3" style="background-color: #f8b003">
+                    <div class="card-header text-center" style="font-weight: bold">İçerideki Ziyaretçi</div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" id="notExitedVisitorCount">...</h5>
+                        <p class="card-text">Bugün çıkış yapmamış ziyaretçi sayısı</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grafikler -->
+
+        <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header text-center" style="font-weight: bold; color: #2f2515">Ziyaretçi Dağılımı</div>
+                    <div class="card-body text-center">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafik Scriptleri -->
+    <script>
+               async function loadVisitorStats() {
+            try {
+                const weeklyRes = await fetch('/api/VisitorStats/weekly');
+                const weeklyVisitors = await weeklyRes.json();
+
+                const dailyRes = await fetch('/api/VisitorStats/daily');
+                const dailyStats = await dailyRes.json();
+
+                const totalWeeklyVisitors = Object.values(weeklyVisitors).reduce((a, b) => a + b, 0);
+
+                document.getElementById('weeklyVisitorCount').textContent = totalWeeklyVisitors;
+                document.getElementById('todayVisitorCount').textContent = dailyStats.todayVisitorCount;
+                document.getElementById('notExitedVisitorCount').textContent = dailyStats.notExitedVisitorCount;
+
+                const pieCtx = document.getElementById('pieChart').getContext('2d');
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(weeklyVisitors),
+                        datasets: [{
+                            label: 'Ziyaretçi Dağılımı',
+                            data: Object.values(weeklyVisitors),
+                            backgroundColor: [
+                                'rgba(255, 87, 51, 0.7)',
+                                'rgba(0, 180, 190, 0.7)',
+                                'rgba(248, 176, 3, 0.7)',
+                                'rgba(255, 99, 71, 0.7)',
+                                'rgba(0, 123, 124, 0.7)'
+                            ],
+                            borderColor: '#fafafa',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+
+            } catch (error) {
+                console.error('Ziyaretçi verileri yüklenirken hata oluştu:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadVisitorStats);
+    </script>
+</body>
