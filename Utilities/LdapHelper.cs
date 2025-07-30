@@ -11,9 +11,9 @@ namespace VisitorManagementSystem.Utilities
         {
             try
             {
-                string path = "LDAP://sirketismi.local:389/DC=sirketismi,DC=local";
+                string path = "LDAP://Company.local:389/DC=Company,DC=local";
 
-                DirectoryEntry entry = new DirectoryEntry(path, "sirketismi.local\\" + userName, password);
+                DirectoryEntry entry = new DirectoryEntry(path, "Company.local\\" + userName, password);
                 Object native = entry.NativeObject;
 
                 UserName = userName;

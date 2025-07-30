@@ -9,7 +9,7 @@ namespace VisitorManagementSystem.Utilities
     {
         private const int KeySize = 256; 
         private const int DerivationIterations = 1000; 
-        private static readonly string passPhrase = "SirketIsmi2025"; 
+        private static readonly string passPhrase = "Company2025"; 
 
         public static string Encrypt(string plainText)
         {
