@@ -19,7 +19,7 @@ namespace VisitorManagementSystem.Business
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-         
+
 
         public void AddVisitor(Visitor visitor, string locationIdStr, string recordedBy)
         {
@@ -31,21 +31,21 @@ namespace VisitorManagementSystem.Business
 
         public List<Visitor> ListVisitor(DateTime? startDate, DateTime? endDate, int locationId)
         {
-			var query = _context.Visitors
-			            .Where(v => v.LocationId == locationId)
-			            .AsQueryable();
+            var query = _context.Visitors
+                        .Where(v => v.LocationId == locationId)
+                        .AsQueryable();
 
-			if (startDate.HasValue)
-			{
-				query = query.Where(v => v.EntryDate.Date >= startDate.Value);
-			}
+            if (startDate.HasValue)
+            {
+                query = query.Where(v => v.EntryDate.Date >= startDate.Value);
+            }
 
-			if (endDate.HasValue)
-			{
-				query = query.Where(v => v.EntryDate.Date <= endDate.Value);
-			}
+            if (endDate.HasValue)
+            {
+                query = query.Where(v => v.EntryDate.Date <= endDate.Value);
+            }
 
-			var visitors = query.ToList();
+            var visitors = query.ToList();
 
             visitors.ForEach(visitor =>
             {
@@ -53,7 +53,7 @@ namespace VisitorManagementSystem.Business
                 visitor.IsInside = visitor.ExitDate == null || visitor.ExitDate == DateTime.MinValue;
             });
 
-            return visitors; 
+            return visitors;
         }
 
         public List<VisitorViewModel> ListVisitorViewModel(DateTime? startDate, DateTime? endDate, int locationId)
@@ -76,7 +76,7 @@ namespace VisitorManagementSystem.Business
 
             var visitorViewModels = visitors.Select(visitor =>
             {
-                 DecryptVisitorFields(visitor);
+                DecryptVisitorFields(visitor);
 
                 return new VisitorViewModel
                 {
@@ -103,14 +103,14 @@ namespace VisitorManagementSystem.Business
 
             EncryptVisitorFields(visitor);
 
-            existing.FullName = visitor.FullName;                
-            existing.CitizenshipNumber = visitor.CitizenshipNumber; 
+            existing.FullName = visitor.FullName;
+            existing.CitizenshipNumber = visitor.CitizenshipNumber;
             existing.CompanyName = visitor.CompanyName;
             existing.MeetingWith = visitor.MeetingWith;
             existing.Gender = visitor.Gender;
 
             _context.Update(existing);
-			_context.SaveChanges();
+            _context.SaveChanges();
         }
 
         public void MarkVisitorAsExited(int visitorId, string stoppedBy)
@@ -236,10 +236,9 @@ namespace VisitorManagementSystem.Business
 
         private int? GetCurrentLocationId()
         {
-            var request = _httpContextAccessor.HttpContext?.Request;
-            if (request != null &&
-                request.Cookies.TryGetValue("LocationId", out var locationIdStr) &&
-                int.TryParse(locationIdStr, out int locationId))
+            var user = _httpContextAccessor.HttpContext?.User;
+            var locationIdClaim = user?.Claims.FirstOrDefault(c => c.Type == "LocationId");
+            if (locationIdClaim != null && int.TryParse(locationIdClaim.Value, out int locationId))
             {
                 return locationId;
             }

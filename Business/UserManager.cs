@@ -25,20 +25,12 @@ namespace VisitorManagementSystem.Business
 
         public void SetLocationCookie(HttpResponse response, string locationId)
         {
-            CookieOptions options = new CookieOptions
-            {
-                Expires = DateTime.Now.AddDays(7)
-            };
-            response.Cookies.Append("LocationId", locationId, options);
+            response.Cookies.Append("LocationId", locationId);
         }
 
         public void SetUserNameCookie(HttpResponse response, string userName)
         {
-            CookieOptions options = new CookieOptions
-            {
-                Expires = DateTime.Now.AddDays(7)
-            };
-            response.Cookies.Append("UserName", userName, options);
+            response.Cookies.Append("UserName", userName);
         }
 
         public bool ValidateUser(string username, string password)
@@ -54,8 +46,6 @@ namespace VisitorManagementSystem.Business
             if (string.IsNullOrWhiteSpace(locationId))
                 return false;
 
-            SetLocationCookie(response, locationId);
-            SetUserNameCookie(response, username);
             return true;
         }
     }

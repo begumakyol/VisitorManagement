@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using VisitorManagementSystem.Business;
 using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models;
@@ -7,13 +8,19 @@ using VisitorManagementSystem.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Authentication ve Authorization
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/User/GirisYap";  // Giriþ sayfasý yolu
-        options.LogoutPath = "/User/CikisYap"; // Çýkýþ sayfasý
-        options.AccessDeniedPath = "/Home/Yetkisiz"; // Yetkisiz eriþim yönlendirmesi
-    });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "cookie";
+    options.DefaultChallengeScheme = "cookie";
+
+}).AddCookie("cookie", options =>
+{
+    options.Cookie.Name = "cookie";
+    options.LoginPath = "/User/GirisYap";  // Giriþ sayfasý yolu
+    options.LogoutPath = "/User/CikisYap"; // Çýkýþ sayfasý
+    options.AccessDeniedPath = "/Home/Yetkisiz"; // Yetkisiz eriþim yönlendirmesi
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+});
 
 builder.Services.AddAuthorization();
 
@@ -43,7 +50,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
- 
+
 
 // Authentication & Authorization Middleware
 app.UseAuthentication();
@@ -63,7 +70,7 @@ app.Use(async (context, next) =>
 // Controller rotalarý
 app.MapControllerRoute(
     name: "default",
-    pattern: "User/GirisYap", 
+    pattern: "User/GirisYap",
     defaults: new { controller = "User", action = "GirisYap" }
 );
 

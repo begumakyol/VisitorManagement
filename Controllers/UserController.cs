@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VisitorManagementSystem.Business.Abstract;
-using VisitorManagementSystem.Models.View;
+
 using VisitorManagementSystem.Models.ViewModels;
 using VisitorManagementSystem.Utilities;
 
@@ -33,7 +33,7 @@ namespace VisitorManagement.Controllers
 
         [Route("User/GirisYap")]
         [HttpPost]
-        public  IActionResult Login(AdLoginVM adLoginVM)
+        public async Task<IActionResult> LoginAsync(AdLoginVM adLoginVM)
         {
             if (string.IsNullOrWhiteSpace(adLoginVM.SelectedLocation))
             {
@@ -46,6 +46,24 @@ namespace VisitorManagement.Controllers
 
                 if (loginSuccess)
                 {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, adLoginVM.UserName),
+                        new Claim("LocationId", adLoginVM.SelectedLocation),
+                        new Claim("CustomClaimType", "CustomValue") // Ekstra claimler ekleyebilirsin
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "cookie");
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(1)
+                    };
+
+                    await HttpContext.SignInAsync(
+                        "cookie",
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
                     return Redirect("/Home/Index");
                 }
                 else
@@ -61,7 +79,8 @@ namespace VisitorManagement.Controllers
         [Route("User/CikisYap")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync("cookie");
+
             return RedirectToAction("GirisYap", "User");
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VisitorManagementSystem.Business;
 using VisitorManagementSystem.Business.Abstract;
@@ -7,6 +8,7 @@ using VisitorManagementSystem.Utilities;
 
 namespace VisitorManagementSystem.Controllers
 {
+    [Authorize]
     public class VisitorController : Controller
     {
         private readonly IVisitorManager _visitorManager;
@@ -40,10 +42,12 @@ namespace VisitorManagementSystem.Controllers
         [HttpGet]
         public IActionResult ListVisitor(DateTime? startDate, DateTime? endDate)
         {
-			if (!Request.Cookies.TryGetValue("LocationId", out string locationIdStr) || !int.TryParse(locationIdStr, out int locationId))
-			{
-				return BadRequest("Geçerli bir LocationId cookie değeri bulunamadı.");
-			}
+            var locationIdClaim = User.Claims.FirstOrDefault(c => c.Type == "LocationId");
+
+            if (locationIdClaim == null || !int.TryParse(locationIdClaim.Value, out int locationId))
+            {
+                return BadRequest("Geçerli bir LocationId claim değeri bulunamadı.");
+            }
 
             var visitors = _visitorManager.ListVisitorViewModel(startDate, endDate, locationId);
 
@@ -51,10 +55,10 @@ namespace VisitorManagementSystem.Controllers
             return View(visitors);
         }
 
-		[Route("Visitor/ZiyaretciGuncelle")]
-		[HttpPost]
-		public IActionResult UpdateVisitor(Visitor visitor)
-		{
+        [Route("Visitor/ZiyaretciGuncelle")]
+        [HttpPost]
+        public IActionResult UpdateVisitor(Visitor visitor)
+        {
             if (!_visitorManager.VisitorExists(visitor.VisitorId))
             {
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -74,7 +78,7 @@ namespace VisitorManagementSystem.Controllers
 
         }
 
-		[HttpPost]
+        [HttpPost]
         public IActionResult ExitVisitor(int visitorId)
         {
             string? stopRecordedBy = Request.Cookies["UserName"];
