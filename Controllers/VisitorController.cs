@@ -81,10 +81,16 @@ namespace VisitorManagementSystem.Controllers
         [HttpPost]
         public IActionResult ExitVisitor(int visitorId)
         {
-            string? stopRecordedBy = Request.Cookies["UserName"];
+            var userNameClaim = User.FindFirst("UserName");
+
+            if (userNameClaim == null || string.IsNullOrEmpty(userNameClaim.Value))
+            {
+                return BadRequest("Geçerli bir UserName claim değeri bulunamadı.");
+            }
+
+            string stopRecordedBy = userNameClaim.Value;
             _visitorManager.MarkVisitorAsExited(visitorId, stopRecordedBy);
 
-            // Güncelleme başarılıysa anasayfaya veya ilgili sayfaya yönlendir
             return RedirectToAction("ListVisitor");
         }
     }

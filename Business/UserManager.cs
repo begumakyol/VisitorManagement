@@ -23,16 +23,6 @@ namespace VisitorManagementSystem.Business
                 }).ToList();
         }
 
-        public void SetLocationCookie(HttpResponse response, string locationId)
-        {
-            response.Cookies.Append("LocationId", locationId);
-        }
-
-        public void SetUserNameCookie(HttpResponse response, string userName)
-        {
-            response.Cookies.Append("UserName", userName);
-        }
-
         public bool ValidateUser(string username, string password)
         {
             return LdapHelper.IsValidDirectoryServiceUser(username, password);
