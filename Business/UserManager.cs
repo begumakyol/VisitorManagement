@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Utilities;
 

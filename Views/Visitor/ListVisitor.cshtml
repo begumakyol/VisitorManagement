@@ -243,53 +243,55 @@
 			});
 		});
 
-		document.getElementById("filterButton").addEventListener("click", function () {
-			var start = document.getElementById("startDate").value;
-			var end = document.getElementById("endDate").value;
+			document.getElementById("filterButton").addEventListener("click", function () {
+				var start = document.getElementById("startDate").value;
+				var end = document.getElementById("endDate").value;
 
-			var url = "/Visitor/ZiyaretciListele";
+				var url = "/Visitor/ZiyaretciListele";
 
-			var params = [];
-			if (start) params.push("startDate=" + encodeURIComponent(start));
-			if (end) params.push("endDate=" + encodeURIComponent(end));
+				var params = [];
+				if (start) params.push("startDate=" + encodeURIComponent(start));
+				if (end) params.push("endDate=" + encodeURIComponent(end));
 
-			if (params.length > 0) {
-				url += "?" + params.join("&");
-			}
+				if (params.length > 0) {
+					url += "?" + params.join("&");
+				}
 
-			window.location.href = url;
-		});
-		document.getElementById("startDate").addEventListener("change", function () {
-			var startDate = this.value;
-			var endDateInput = document.getElementById("endDate");
+				window.location.href = url;
+			});
 
-			endDateInput.min = startDate;
+			document.getElementById("startDate").addEventListener("change", function () {
+				var startDate = this.value;
+				var endDateInput = document.getElementById("endDate");
 
-			if (endDateInput.value && endDateInput.value < startDate) {
-				endDateInput.value = "";
-			}
-		});
-		document.getElementById("filterButton").addEventListener("click", function (event) {
-			var startDateInput = document.getElementById("startDate").value;
-			var endDateInput = document.getElementById("endDate").value;
+				endDateInput.min = startDate;
 
-			if (!startDateInput) {
-				alert("Lütfen başlangıç tarihini giriniz.");
-				event.preventDefault();
-				return;
-			}
-ü
-			if (startDateInput && !endDateInput.value) {
-				var today = new Date();
-				var todayString = today.toISOString().split("T")[0]; 
-				endDateInput.value = todayString;
-			}
+				if (endDateInput.value && endDateInput.value < startDate) {
+					endDateInput.value = "";
+				}
+			});
 
-			if (!startDateInput && endDateInput.value) {
-				alert("Lütfen başlangıç tarihini de giriniz.");
-				event.preventDefault();
-				return;
-			}
-		});
+			document.getElementById("filterButton").addEventListener("click", function (event) {
+				var startDateInput = document.getElementById("startDate").value;
+				var endDateInput = document.getElementById("endDate").value;
+
+				if (!startDateInput) {
+					alert("Lütfen başlangıç tarihini giriniz.");
+					event.preventDefault();
+					return;
+				}
+	
+				if (startDateInput && !endDateInput.value) {
+					var today = new Date();
+					var todayString = today.toISOString().split("T")[0]; 
+					endDateInput.value = todayString;
+				}
+
+				if (!startDateInput && endDateInput.value) {
+					alert("Lütfen başlangıç tarihini de giriniz.");
+					event.preventDefault();
+					return;
+				}
+			});
 	</script>
 }

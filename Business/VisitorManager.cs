@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using VisitorManagementSystem.Business.Abstract;
+﻿using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models;
 using VisitorManagementSystem.Models.Entities;
 using VisitorManagementSystem.Utilities;
-using Microsoft.AspNetCore.Http;
 using VisitorManagementSystem.Models.ViewModels;
 
 
@@ -50,7 +48,7 @@ namespace VisitorManagementSystem.Business
             visitors.ForEach(visitor =>
             {
                 DecryptVisitorFields(visitor);
-                visitor.IsInside = visitor.ExitDate == null || visitor.ExitDate == DateTime.MinValue;
+                visitor.IsInside = visitor.ExitDate == DateTime.MinValue;
             });
 
             return visitors;
@@ -133,7 +131,7 @@ namespace VisitorManagementSystem.Business
             {
                 DecryptVisitorFields(visitor);
             }
-            return visitor;
+            return visitor!;
         }
 
         public void PrepareVisitorForAdd(Visitor visitor, string locationIdStr, string recordedBy)
@@ -173,7 +171,7 @@ namespace VisitorManagementSystem.Business
                 return new Dictionary<string, int>();
 
             var start = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1); // Pazartesi
-            var end = start.AddDays(4); // Cuma
+            var end = start.AddDays(5); // Cuma
 
             var data = _context.Visitors
                                     .Where(v => v.LocationId == locationId.Value &&
@@ -220,18 +218,6 @@ namespace VisitorManagementSystem.Business
             return _context.Visitors
                 .Count(v => v.LocationId == locationId.Value &&
                             v.IsInside);
-        }
-
-        public int GetMonthlyVisitorCount()
-        {
-            var locationId = GetCurrentLocationId();
-            if (locationId == null) return 0;
-
-            var today = DateTime.Today;
-            return _context.Visitors
-                .Count(v => v.LocationId == locationId.Value &&
-                            v.EntryDate.Year == today.Year &&
-                            v.EntryDate.Month == today.Month);
         }
 
         private int? GetCurrentLocationId()

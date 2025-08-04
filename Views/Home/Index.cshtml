@@ -64,7 +64,7 @@
 
     <!-- Grafik Scriptleri -->
     <script>
-               async function loadVisitorStats() {
+        async function loadVisitorStats() {
             try {
                 const weeklyRes = await fetch('/api/VisitorStats/weekly');
                 const weeklyVisitors = await weeklyRes.json();
@@ -101,12 +101,11 @@
                         responsive: true
                     }
                 });
-
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error('Ziyaretçi verileri yüklenirken hata oluştu:', error);
             }
         }
-
         window.addEventListener('DOMContentLoaded', loadVisitorStats);
     </script>
 </body>

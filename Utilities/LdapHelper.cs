@@ -1,5 +1,4 @@
 ﻿using System.DirectoryServices;
-using VisitorManagementSystem.Models.Entities;
 
 namespace VisitorManagementSystem.Utilities
 {

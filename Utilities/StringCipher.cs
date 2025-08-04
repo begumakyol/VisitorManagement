@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 namespace VisitorManagementSystem.Utilities
 {
@@ -43,7 +40,6 @@ namespace VisitorManagementSystem.Utilities
                 }
             }
         }
-
         public static string Decrypt(string cipherText)
         {
             try
@@ -81,7 +77,6 @@ namespace VisitorManagementSystem.Utilities
                 return null;          
             }
         }
-        
         private static byte[] GenerateRandomBytes(int size)
         {
             byte[] randomBytes = new byte[size];

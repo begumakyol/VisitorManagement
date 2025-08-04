@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VisitorManagementSystem.Business;
 using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models.Entities;
-using VisitorManagementSystem.Utilities;
-
 namespace VisitorManagementSystem.Controllers
 {
     [Authorize]

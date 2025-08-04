@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models.Entities;
 
 namespace VisitorManagementSystem.Controllers
 {
+    [Authorize]
     public class LocationController : Controller
     {
         private readonly ILocationManager _locationManager;

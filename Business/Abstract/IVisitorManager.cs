@@ -18,6 +18,5 @@ namespace VisitorManagementSystem.Business.Abstract
         public Dictionary<string, int> GetWeeklyVisitors();
         public int GetTodayVisitorCount();
         public int GetNotExitedVisitorCount();
-        public int GetMonthlyVisitorCount();
     }
 }

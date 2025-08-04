@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
-using VisitorManagementSystem.Business.Abstract;
+﻿using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models;
 using VisitorManagementSystem.Models.Entities;
 

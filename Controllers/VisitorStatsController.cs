@@ -26,13 +26,11 @@ namespace VisitorManagementSystem.Controllers
         {
             var todayVisitorCount = _visitorManager.GetTodayVisitorCount();
             var notExitedVisitorCount = _visitorManager.GetNotExitedVisitorCount();
-            var monthlyVisitorCount = _visitorManager.GetMonthlyVisitorCount();
 
             return Ok(new
             {
                 todayVisitorCount,
                 notExitedVisitorCount,
-                monthlyVisitorCount
             });
         }
     }

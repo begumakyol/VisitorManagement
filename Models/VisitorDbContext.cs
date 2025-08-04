@@ -10,7 +10,6 @@ namespace VisitorManagementSystem.Models
         public DbSet<Location> Locations { get; set; }
         public DbSet<ADLogin> ADLogins { get; set; }
 
- 
         public VisitorDbContext(DbContextOptions<VisitorDbContext> options) : base(options)
         {
         }
@@ -19,6 +18,5 @@ namespace VisitorManagementSystem.Models
         {
            modelBuilder.Entity<ADLogin>().HasNoKey();
         }
-
     }
 }
