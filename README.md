@@ -7,7 +7,7 @@
 <img width="1916" height="1070" alt="Image" src="https://github.com/user-attachments/assets/0315c57c-7b28-4d2e-9ebf-ce272262d3c8" />
 
 <h3 align="center">The Login Page</h3>
-<h6 align="center">The login page allows users to log in securely via Active Directory authentication.</h6>
+<h6 align="center">The login page serves as a secure entry point, allowing users to access the system via Active Directory authentication.</h6>
 
 ### Overview
 
