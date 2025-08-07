@@ -83,13 +83,13 @@ namespace VisitorManagement.Controllers
         [Route("User/CikisYap")]
         public async Task<IActionResult> Logout()
         {
-            var aDLogin = new AdLogin
-            {
-                UserName = User.Identity.Name,
-                LogoutDate = DateTime.Now
-            };
+            var userName = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
-            _userManager.UpdateADLogin(aDLogin);
+            if (!string.IsNullOrEmpty(userName))
+            {
+                _userManager.UpdateADLogin(userName);
+            }
+
 
             await HttpContext.SignOutAsync("cookie");
 

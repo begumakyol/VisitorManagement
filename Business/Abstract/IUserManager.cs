@@ -8,6 +8,6 @@ namespace VisitorManagementSystem.Business.Abstract
         List<SelectListItem> GetLocationSelectList();
         public bool TryLogin(HttpResponse response, string username, string password, string locationId);
         public void AddADLogin(ADLogin aDLogin);
-        public void UpdateADLogin(ADLogin aDLogin);
+        public void UpdateADLogin(string userName);
     }
 }

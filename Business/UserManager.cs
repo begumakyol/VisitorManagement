@@ -46,14 +46,15 @@ namespace VisitorManagementSystem.Business
             _context.SaveChanges();
         }
 
-        public void UpdateADLogin(ADLogin aDLogin)
+        public void UpdateADLogin(string userName)
         {
-            var existing = _context.ADLogins.FirstOrDefault(ad => ad.Id == aDLogin.Id);
+            var existing = _context.ADLogins
+                           .OrderByDescending(ad => ad.LoginDate) // Son giriş kaydını al
+                           .FirstOrDefault(ad => ad.UserName == userName && ad.LogoutDate == null);
+
             if (existing is null) return;
 
             existing.LogoutDate = DateTime.Now;
-
-            _context.ADLogins.Update(aDLogin);
             _context.SaveChanges();
         }
     }
