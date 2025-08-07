@@ -7,35 +7,47 @@
 <img width="1916" height="1070" alt="Image" src="https://github.com/user-attachments/assets/0315c57c-7b28-4d2e-9ebf-ce272262d3c8" />
 
 <h3 align="center">The Login Page</h3>
-<h6 align="center">The login page allows users to log in securely via Active Directory authentication.</h6>
+<h6 align="center">The login page serves as a secure entry point, allowing users to access the system via Active Directory authentication.</h6>
 
 ### Overview
 
-This repository hosts a **Visitor Management System** project, developed based on the principles of **Onion Architecture**. The system is built using Microsoft's popular web application development framework, **ASP.NET MVC**.
+This repository hosts a Visitor Management System project, developed to digitize and manage internal visitor entry and exit processes. The system provides a user-friendly interface for recording, updating, and tracking visitor information while prioritizing security and data integrity.
 
 ---
 
 ### Technical Details
 
-* **Architecture:** The project adheres to **Onion Architecture** principles, featuring a layered structure. This design promotes independence and loose coupling between business logic, data access, and presentation layers, resulting in a more maintainable and testable codebase.
+* **Architecture:** The project adheres to a layered architecture based on the ASP.NET Core 8 MVC framework. This design promotes clean code, maintainability, and scalability by separating concerns across different layers.
 
 * **Technology Stack:**
-    * **Backend:** Developed with ASP.NET MVC, utilizing the C# programming language.
-    * **Frontend:** Implemented using standard web technologies: HTML and CSS.
+    * **Backend:** Developed with ASP.NET Core 8 MVC and C#.
+    * **Frontend:** Implemented using standard web technologies: HTML5, CSS3, JavaScript, Bootstrap 5, Chart.js, and jQuery.
+    * **Database:** SQL Server managed with Entity Framework Core 8.
+    * **Security:** Features Cookie-based authentication, LDAP integration, and AES (256-bit) encryption.
 
-* **Languages Used:**
-    * **C#:** Accounts for 57.5% of the codebase, primarily used for business logic, controllers, and model definitions.
-    * **HTML:** Makes up 35.2% of the code, used for defining the structure and content of user interface view files.
-    * **CSS:** Constitutes 7.3% of the code, applied for styling and visual presentation of the user interface.
+* **Project Functions:**
+    * **Secure Login System:** Users authenticate via LDAP (Active Directory).
+    * **Visitor Management:**
+        * **Visitor Addition:** Create new visitor records with essential details.
+        * **Data Security:** Sensitive data like names and ID numbers are encrypted using the AES-256 algorithm.
+        * **Visitor Listing:** View all visitor records in a table, with filters for date ranges. Visitors currently on-site are highlighted.
+        * **Exit Process:** A one-click process to record a visitor's exit time.
+        * **Update:** Dynamically update visitor records through a modal window.
+    * **Dashboard and Statistics:** The homepage displays real-time statistics, including weekly and daily visitor counts, and a pie chart of visitor distribution, all updated via AJAX.
+  
+* **Security Measures:**
+    * **Data Encryption:** Critical visitor information is stored in the database using a StringCipher service to prevent unauthorized access.
+    * **Salt and IV:** Each encryption operation uses a randomly generated salt and IV to enhance security against brute-force attacks.
+    * **Authentication:** LDAP integration ensures that only authorized corporate accounts can access the system.
 
-* **Project Structure:** The repository follows the typical directory structure of a standard ASP.NET MVC project, which includes:
-    * `Business`: Contains the business logic layer components.
-    * `Controllers`: Houses the MVC controllers responsible for handling user input and interactions.
-    * `Migrations`: Used for managing database schema changes, typically with an ORM like Entity Framework Code First.
-    * `Models`: Defines data models and potentially View Models that represent the data structure.
+* **Project Structure:** The repository follows a logical directory structure, which includes:
+    * `Business`: Contains the core business logic and rules.
+    * `Controllers`: Houses the MVC controllers responsible for handling user interactions.
+    * `Migrations`: Manages database schema changes using Entity Framework Core.
+    * `Models`: Defines data models (Entities), database context (DbContext), and front-end data models (ViewModels).
     * `Properties`: Contains project-specific configuration and property files.
-    * `Utilities`: Includes utility classes or common helper functions.
-    * `Views`: Stores the user interface (UI) view files, which define what the user sees.
+    * `Utilities`: Includes helper classes for encryption, LDAP, and other common functions.
+    * `Views`: Stores the user interface (UI) view files (.cshtml) , which define what the user sees.
 <br>
 
 ### Screenshots
