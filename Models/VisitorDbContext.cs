@@ -13,10 +13,8 @@ namespace VisitorManagementSystem.Models
         public VisitorDbContext(DbContextOptions<VisitorDbContext> options) : base(options)
         {
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           modelBuilder.Entity<ADLogin>().HasNoKey();
         }
     }
 }

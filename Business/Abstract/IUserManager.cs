@@ -7,5 +7,7 @@ namespace VisitorManagementSystem.Business.Abstract
         bool ValidateUser(string username, string password);
         List<SelectListItem> GetLocationSelectList();
         public bool TryLogin(HttpResponse response, string username, string password, string locationId);
+        public void AddADLogin(ADLogin aDLogin);
+        public void UpdateADLogin(ADLogin aDLogin);
     }
 }

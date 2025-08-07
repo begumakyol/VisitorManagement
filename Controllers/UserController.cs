@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using VisitorManagementSystem.Business.Abstract;
 using VisitorManagementSystem.Models.ViewModels;
+using VisitorManagementSystem.Models.Entities;
 
 namespace VisitorManagement.Controllers
 {
@@ -52,13 +53,21 @@ namespace VisitorManagement.Controllers
 
                     var authProperties = new AuthenticationProperties
                     {
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(1)
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(9)
                     };
 
                     await HttpContext.SignInAsync(
                         "cookie",
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
+
+                    ADLogin adLogin = new ADLogin();
+                    adLogin.UserName = adLoginVM.UserName;
+                    adLogin.LoginDate = DateTime.Now;
+                    adLogin.LocationId = Convert.ToInt32(adLoginVM.SelectedLocation);
+
+                    _userManager.AddADLogin(adLogin);
+
                     return Redirect("/Home/Index");
                 }
                 else
@@ -74,6 +83,14 @@ namespace VisitorManagement.Controllers
         [Route("User/CikisYap")]
         public async Task<IActionResult> Logout()
         {
+            var aDLogin = new AdLogin
+            {
+                UserName = User.Identity.Name,
+                LogoutDate = DateTime.Now
+            };
+
+            _userManager.UpdateADLogin(aDLogin);
+
             await HttpContext.SignOutAsync("cookie");
 
             return RedirectToAction("GirisYap", "User");
